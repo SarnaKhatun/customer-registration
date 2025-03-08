@@ -25,7 +25,7 @@ class CustomerResource extends JsonResource
             'license_number' => $this->license_number ?? null,
             'school_name' => $this->school_name ?? null,
             'teacher_name' => $this->teacher_name ?? null,
-            'image_url' => $this->image ? asset($this->image) : null,
+            'image_url' => $this->image ? asset('backend/images/customer/'.$this->image) : null,
             'created_by' => $this->created_by,
             'approved' => $this->approved,
             'status' => $this->status,

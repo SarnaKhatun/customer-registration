@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\NewsFeedPost;
 use App\Traits\ImageUploader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class NewsFeedPostApiController extends Controller
@@ -55,7 +56,17 @@ class NewsFeedPostApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Post created successfully.',
-                'data' => $newsPost
+                'data' => [
+                    'title' => $newsPost->title,
+                    'approved' => $newsPost->approved,
+                    'status' => $newsPost->status,
+                    'created_by' => $newsPost->created_by,
+                    'created_at' => $newsPost->created_at,
+                    'id' => $newsPost->id,
+                    'images' => !empty($newsPost->image) ? collect(json_decode($newsPost->image, true))->map(function ($img) {
+                        return asset('backend/images/news-feed-post/' . $img);
+                    })->toArray() : [],
+                    ]
             ], 201);
 
         } catch (\Exception $e) {
@@ -98,7 +109,9 @@ class NewsFeedPostApiController extends Controller
                     'created_at' => $post->created_at->diffForHumans(),
                     'status' => $post->status == 1 ? 'Active' : 'Inactive',
                     'approved' => $post->approved == 1 ? 'Approved': 'Not Approved',
-                    'images' => !empty($post->image) ? json_decode($post->image, true) : [],
+                    'images' => !empty($post->image) ? collect(json_decode($post->image, true))->map(function ($img) {
+                        return asset('backend/images/news-feed-post/' . $img);
+                    })->toArray() : [],
                 ];
             });
 
@@ -165,7 +178,17 @@ class NewsFeedPostApiController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Post updated successfully.',
-                'data' => $newsPost
+                'data' => [
+                    'title' => $newsPost->title,
+                    'approved' => $newsPost->approved,
+                    'status' => $newsPost->status,
+                    'created_by' => $newsPost->created_by,
+                    'created_at' => $newsPost->created_at,
+                    'id' => $newsPost->id,
+                    'images' => !empty($newsPost->image) ? collect(json_decode($newsPost->image, true))->map(function ($img) {
+                        return asset('backend/images/news-feed-post/' . $img);
+                    })->toArray() : [],
+                ]
             ], 200);
 
         } catch (\Exception $e) {

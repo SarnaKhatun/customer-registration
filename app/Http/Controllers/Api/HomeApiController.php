@@ -33,7 +33,7 @@ class HomeApiController extends Controller
                     return [
                         'id' => $banner->id,
                         'title' => $banner->title,
-                        'image' => $banner->image ?? '',
+                        'image' => asset('backend/images/banner/'.$banner->image) ?? '',
                     ];
                 }),
                     ], 200);
@@ -208,7 +208,10 @@ class HomeApiController extends Controller
                     'created_by' =>$post->createdBy->name,
                     'title' => $post->title,
                     'created_at' => $post->created_at->diffForHumans(),
-                    'images' => !empty($post->image) ? json_decode($post->image, true) : [],
+                    'images' => !empty($post->image) ? collect(json_decode($post->image, true))->map(function ($img) {
+                        return asset('backend/images/news-feed-post/' . $img);
+                    })->toArray() : [],
+
 
                 ];
             });
