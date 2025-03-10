@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Traits\ImageUploader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class AgentInchargeLoginController extends Controller
 {
+    use ImageUploader;
     public function agentInchargeLogin(Request $request)
     {
 
@@ -39,6 +41,7 @@ class AgentInchargeLoginController extends Controller
             'id' => $user->id,
             'name' => $user->name,
             'phone' => $user->phone,
+            'image' => $user->image ? asset('backend/images/user/'.$user->image) : '',
             'role' => $user->role,
             'status' => $user->status,
             'approved' => $user->approved,
@@ -71,7 +74,9 @@ class AgentInchargeLoginController extends Controller
             'role' => $user->role,
             'status' => $user->status,
             'approved' => $user->approved,
-            'image' => $user->image ?? '',
+            'image' =>$user->image ? asset('backend/images/user/'.$user->image) : '',
+
+            //'image' => asset('backend/images/user/'.$user->image) ?? '',
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
         ]);
@@ -87,6 +92,7 @@ class AgentInchargeLoginController extends Controller
 
 
         $user = auth()->user();
+       // dd($request->all());
 
 
         if (!in_array($user->role, [2, 3])) {
@@ -106,14 +112,14 @@ class AgentInchargeLoginController extends Controller
 
 
         if (isset($request->image)) {
-            $imageDirectory = 'uploads/images/user';
+            $imageDirectory = 'backend/images/user/';
             $imageFilename = basename($user->image);
 
             $this->deleteOne($imageDirectory, $imageFilename);
 
             $file = $request->image;
-            $filename = $this->uploadImage($file, 300, 300, 'uploads/images/user/', true);
-            $image = 'uploads/images/user/' . $filename;
+            $filename = $this->uploadImage($file, 300, 300, 'backend/images/user/', true);
+            $image = $filename;
         } else {
             $image = $user->image ?? '';
         }
@@ -135,7 +141,7 @@ class AgentInchargeLoginController extends Controller
             'role' => $user->role,
             'status' => $user->status,
             'approved' => $user->approved,
-            'image' => $user->image ?? '',
+            'image' =>$user->image ? asset('backend/images/user/'.$user->image) : '',
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at,
         ]);

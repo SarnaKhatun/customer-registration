@@ -206,6 +206,7 @@ class HomeApiController extends Controller
                 return [
                     'id' => $post->id,
                     'created_by' =>$post->createdBy->name,
+                    'created_by_image' => asset('backend/images/user/'.$post->createdBy->image),
                     'title' => $post->title,
                     'created_at' => $post->created_at->diffForHumans(),
                     'images' => !empty($post->image) ? collect(json_decode($post->image, true))->map(function ($img) {

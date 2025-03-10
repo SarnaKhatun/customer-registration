@@ -46,10 +46,24 @@ class CustomerController extends Controller
 
             $customers = $query->where('approved', 1)->where('created_by', $user->id)->latest()->paginate(50)->appends($request->query());
 
+            $formattedCustomers = $customers->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'phone' => $customer->phone,
+                    'address' => $customer->address,
+                    'type' => $customer->type,
+                    'image_url' => $customer->image ? asset('backend/images/customer/'.$customer->image) : null,
+                    'created_by' => $customer->created_by ? $customer->addBY->name : '',
+                    'created_at' => $customer->created_at->toDateTimeString(),
+
+                ];
+            });
+
             return response()->json([
                 'status' => true,
                 'message' => 'Customer list get successfully.',
-                'customer_lists' => CustomerResource::collection($customers),
+                'customer_lists' => $formattedCustomers,
             ], 200);
 
         } catch (Exception $e) {
@@ -70,11 +84,24 @@ class CustomerController extends Controller
             $customers = Customer::where('approved', 0)->where('status', 1)
                 ->orderBy('id', 'desc')
                 ->get();
+            $formattedCustomers = $customers->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->name,
+                    'phone' => $customer->phone,
+                    'address' => $customer->address,
+                    'type' => $customer->type,
+                    'image_url' => $customer->image ? asset('backend/images/customer/'.$customer->image) : null,
+                    'created_by' => $customer->created_by ? $customer->addBY->name : '',
+                    'created_at' => $customer->created_at->toDateTimeString(),
+
+                ];
+            });
 
             return response()->json([
                 'status' => true,
                 'message' => 'Customer list get successfully.',
-                'customer_lists' => CustomerResource::collection($customers),
+                'customer_lists' => $formattedCustomers,
             ], 200);
 
         } catch (Exception $e) {

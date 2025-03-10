@@ -156,7 +156,7 @@ class CustomerAuthController extends Controller
             'vehicle_type' => $customer->vehicle_type,
             'license_number' => $customer->license_number,
             'address' => $customer->address,
-            'image' => $customer->image ?? '',
+            'image' => asset('backend/images/customer/'.$customer->image) ?? '',
             'created_at' => $customer->created_at,
             'updated_at' => $customer->updated_at,
         ]);
@@ -182,14 +182,14 @@ class CustomerAuthController extends Controller
         }
 
         if (isset($request->image)) {
-            $imageDirectory = 'uploads/images/customer';
+            $imageDirectory = 'backend/images/customer/';
             $imageFilename = basename($customer->image);
 
             $this->deleteOne($imageDirectory, $imageFilename);
 
             $file = $request->image;
-            $filename = $this->uploadImage($file, 300, 300, 'uploads/images/customer/', true);
-            $image = 'uploads/images/customer/' . $filename;
+            $filename = $this->uploadImage($file, 300, 300, 'backend/images/customer/', true);
+            $image = $filename;
         } else {
             $image = $customer->image ?? '';
         }
@@ -216,7 +216,7 @@ class CustomerAuthController extends Controller
             'vehicle_type' => $customer->vehicle_type,
             'license_number' => $customer->license_number,
             'address' => $customer->address,
-            'image' => $customer->image ?? '',
+            'image' => asset('backend/images/customer/'.$customer->image) ?? '',
             'created_at' => $customer->created_at,
             'updated_at' => $customer->updated_at,
         ]);
